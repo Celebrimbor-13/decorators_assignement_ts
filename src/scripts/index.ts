@@ -26,15 +26,15 @@ function memo(x: number): any {
     descriptor.value = function () {
       if (cache.has(givenId.value)) {
         let userInCache = cache.get(givenId.value);
-        setTimeout(function () {
-          cache.delete(givenId.value);
-        }, x * 60000);
         return new Promise((resolve) => {
           resolve(userInCache);
         });
       } else {
         return originalMethod(+givenId.value).then((u: User) => {
           cache.set(givenId.value, u);
+          setTimeout(function () {
+            cache.delete(givenId.value);
+          }, x * 60000);
           return u;
         });
       }
